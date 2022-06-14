@@ -18,7 +18,7 @@ mongoose.connect(
 );
 
 //  Fazendo o require da pasta models
-requireDir('./src/models');
+requireDir('./models');
 
 //  Fazendo o require das rotas
 app.use('/api', require('./routers/index.routes'));
