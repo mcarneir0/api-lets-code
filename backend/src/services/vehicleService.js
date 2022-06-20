@@ -56,7 +56,7 @@ const getVehicles = async () => {
 
         if (!response) {
             return {
-                statusCode: 402,
+                statusCode: 404,
                 data: { message: 'Nenhum veículo cadastrado' }
             }
         }
