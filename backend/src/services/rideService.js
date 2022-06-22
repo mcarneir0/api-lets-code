@@ -110,7 +110,122 @@ const getRides = async () => {
     }
 }
 
+const getRidesByUserEmail = async (userEmail) => {
+
+    try {
+        const response = await rideRepository.getRidesByUserEmail(userEmail);
+
+        //  Filtrando as corridas encontradas de acordo com o status
+        const pendentes = response.filter(ride => ride.status === 'pendente');
+        const iniciadas = response.filter(ride => ride.status === 'iniciada');
+        const finalizadas = response.filter(ride => ride.status === 'finalizada');
+
+        return {
+            statusCode: 200,
+            data: {
+                pendentes: pendentes,
+                iniciadas: iniciadas,
+                finalizadas: finalizadas
+            }
+        }
+    }
+    catch (error) {
+        return {
+            statusCode: 500,
+            data: {
+                message: 'Erro ao buscar corridas do usuário',
+                error: error.message
+            }
+        }
+    }
+}
+
+const startRide = async (rideId) => {
+
+    //  Verifica se a corrida existe de acordo com o id
+    try {
+        const rideResponse = await rideRepository.getRideById(rideId);
+        if (!rideResponse) {
+            return {
+                statusCode: 404,
+                data: { message: 'Corrida não encontrada' }
+            }
+        }
+    }
+    catch (error) {
+        return {
+            statusCode: 500,
+            data: {
+                message: 'Erro ao buscar corrida',
+                error: error.message
+            }
+        }
+    }
+
+    //  Atualiza o status da corrida
+    try {
+        const rideResponse = await rideRepository.startRide(rideId);
+        return {
+            statusCode: 200,
+            data: rideResponse
+        }
+    }
+    catch (error) {
+        return {
+            statusCode: 500,
+            data: {
+                message: 'Erro ao iniciar corrida',
+                error: error.message
+            }
+        }
+    }
+}
+
+const endRide = async (rideId) => {
+
+    //  Verifica se a corrida existe de acordo com o id
+    try {
+        const rideResponse = await rideRepository.getRideById(rideId);
+        if (!rideResponse) {
+            return {
+                statusCode: 404,
+                data: { message: 'Corrida não encontrada' }
+            }
+        }
+    }
+    catch (error) {
+        return {
+            statusCode: 500,
+            data: {
+                message: 'Erro ao buscar corrida',
+                error: error.message
+            }
+        }
+    }
+
+    //  Atualiza o status da corrida
+    try {
+        const rideResponse = await rideRepository.endRide(rideId);
+        return {
+            statusCode: 200,
+            data: rideResponse
+        }
+    }
+    catch (error) {
+        return {
+            statusCode: 500,
+            data: {
+                message: 'Erro ao finalizar corrida',
+                error: error.message
+            }
+        }
+    }
+}
+
 module.exports = {
     createRide,
-    getRides
+    getRides,
+    startRide,
+    endRide,
+    getRidesByUserEmail
 }

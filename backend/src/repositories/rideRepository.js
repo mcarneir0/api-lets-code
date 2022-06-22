@@ -11,13 +11,41 @@ const getRides = async () => {
     return response;
 }
 
-const getRideEmAndamento = async (user) => {
-    const response = await Ride.findOne({ user: user, status: 'Em andamento' });
+const getRideById = async (rideId) => {
+    const response = await Ride.findById(rideId);
+    return response;
+}
+
+const startRide = async (rideId) => {
+    const response = await Ride.findByIdAndUpdate(rideId, {
+        $set: {
+            status: 'iniciada',
+            startTime: new Date()
+        }
+    });
+    return response;
+}
+
+const endRide = async (rideId) => {
+    const response = await Ride.findByIdAndUpdate(rideId, {
+        $set: {
+            status: 'finalizada',
+            finishTime: new Date()
+        }
+    });
+    return response;
+}
+
+const getRidesByUserEmail = async (userEmail) => {
+    const response = await Ride.find({ user: { email: userEmail } });
     return response;
 }
 
 module.exports = {
     createRide,
     getRides,
-    getRideEmAndamento
+    getRideById,
+    startRide,
+    endRide,
+    getRidesByUserEmail
 }
