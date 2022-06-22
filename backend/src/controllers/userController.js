@@ -17,8 +17,15 @@ const getUserByTelephoneAndPassword = async (req, res) => {
     return res.status(response.statusCode).json(response.data);
 }
 
+const login = async (req, res) => {
+    const { telephone, password } = req.headers;
+    const response = await userService.login(telephone, password);
+    return res.status(response.statusCode).json(response.data);
+}
+
 module.exports = {
     postUser,
     getUser,
-    getUserByTelephoneAndPassword
+    getUserByTelephoneAndPassword,
+    login
 }

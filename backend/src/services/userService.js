@@ -1,4 +1,5 @@
 const userRepository = require('../repositories/userRepository');
+const jwt = require('jsonwebtoken');
 
 //  Trabalhando com um objeto de retorno padrão
 //  statusCode: armazena o código de status da requisição
@@ -101,9 +102,64 @@ const getUserByTelephoneAndPassword = async (telephone, password) => {
     }
 }
 
+const login = async (telephone, password) => {
+
+    //  Verificar se os parâmetros foram informados
+    if (!telephone || !password) {
+        return {
+            statusCode: 400,
+            data: { message: 'Não foi possível fazer o login. Os parâmetros não foram informados corretamente.' }
+        }
+    }
+
+    //  Verificar se o usuário existe
+    let user;
+    try {
+        user = await userRepository.getUserByTelephoneAndPassword(telephone, password);
+        if (!user) {
+            return {
+                statusCode: 404,
+                data: { message: 'Usuário não encontrado.' }
+            }
+        }
+    }
+    catch (error) {
+        return {
+            statusCode: 500,
+            data: {
+                message: 'Não foi possível obter o usuário.',
+                error: error.message
+            }
+        }
+    }
+
+    //  Se o usuário existir, gerar o token
+    try {
+        const token = jwt.sign({ id: user.id }, "Let's Code", { expiresIn: '10m' });
+        return {
+            statusCode: 200,
+            data: {
+                auth: true,
+                user: user.id,
+                token: token
+            }
+        }
+    }
+    catch (error) {
+        return {
+            statusCode: 500,
+            data: {
+                message: 'Não foi possível gerar o token.',
+                error: error.message
+            }
+        }
+    }
+}
+
 //  Tornando as funções disponíveis para outros arquivos
 module.exports = {
     createUser,
     getUsers,
-    getUserByTelephoneAndPassword
+    getUserByTelephoneAndPassword,
+    login
 }
