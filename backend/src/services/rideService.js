@@ -140,12 +140,21 @@ const getRidesByUserEmail = async (userEmail) => {
     }
 }
 
-const startRide = async (rideId) => {
+const updateRide = async (rideId, newStatus) => {
+
+    //  Verifica se as informações da corrida foram preenchidas
+    if (!rideId || !newStatus) {
+        return {
+            statusCode: 400,
+            data: { message: 'Dados da corrida não preenchidos' }
+        }
+    }
 
     //  Verifica se a corrida existe de acordo com o id
+    let ride;
     try {
-        const rideResponse = await rideRepository.getRideById(rideId);
-        if (!rideResponse) {
+        ride = await rideRepository.getRideById(rideId);
+        if (!ride) {
             return {
                 statusCode: 404,
                 data: { message: 'Corrida não encontrada' }
@@ -162,70 +171,89 @@ const startRide = async (rideId) => {
         }
     }
 
-    //  Atualiza o status da corrida
-    try {
-        const rideResponse = await rideRepository.startRide(rideId);
-        return {
-            statusCode: 200,
-            data: rideResponse
-        }
-    }
-    catch (error) {
-        return {
-            statusCode: 500,
-            data: {
-                message: 'Erro ao iniciar corrida',
-                error: error.message
+    //  Verifica o status atual da corrida e executa a ação de acordo com o status
+    switch (newStatus) {
+        case 'iniciada':
+            //  Verifica se a corrida já foi iniciada
+            if (ride.status === 'iniciada') {
+                return {
+                    statusCode: 400,
+                    data: { message: 'Corrida já iniciada' }
+                }
             }
-        }
-    }
-}
 
-const endRide = async (rideId) => {
+            //  Verifica se a corrida já foi finalizada
+            else if (ride.status === 'finalizada') {
+                return {
+                    statusCode: 400,
+                    data: { message: 'Corrida já finalizada, não é possível alterar' }
+                }
+            }
+            
+            //  Inicia a corrida
+            try {
+                const response = await rideRepository.startRide(rideId);
+                return {
+                    statusCode: 200,
+                    data: response
+                }
+            }
+            catch (error) {
+                return {
+                    statusCode: 500,
+                    data: {
+                        message: 'Erro ao iniciar corrida',
+                        error: error.message
+                    }
+                }
+            }
 
-    //  Verifica se a corrida existe de acordo com o id
-    try {
-        const rideResponse = await rideRepository.getRideById(rideId);
-        if (!rideResponse) {
+        case 'finalizada':
+            //  Verifica se a corrida já foi finalizada
+            if (ride.status === 'finalizada') {
+                return {
+                    statusCode: 400,
+                    data: { message: 'Corrida já finalizada, não é possível alterar' }
+                }
+            }
+
+            //  Verifica se a corrida ainda não foi iniciada
+            else if (ride.status === 'pendente') {
+                return {
+                    statusCode: 400,
+                    data: { message: 'Corrida ainda não iniciada' }
+                }
+            }
+
+            //  Finaliza a corrida
+            try {
+                const response = await rideRepository.endRide(rideId);
+                return {
+                    statusCode: 200,
+                    data: response
+                }
+            }
+            catch (error) {
+                return {
+                    statusCode: 500,
+                    data: {
+                        message: 'Erro ao finalizar corrida',
+                        error: error.message
+                    }
+                }
+            }
+
+        default:
             return {
-                statusCode: 404,
-                data: { message: 'Corrida não encontrada' }
+                statusCode: 400,
+                data: { message: 'Status da corrida inválido' }
             }
-        }
-    }
-    catch (error) {
-        return {
-            statusCode: 500,
-            data: {
-                message: 'Erro ao buscar corrida',
-                error: error.message
-            }
-        }
-    }
-
-    //  Atualiza o status da corrida
-    try {
-        const rideResponse = await rideRepository.endRide(rideId);
-        return {
-            statusCode: 200,
-            data: rideResponse
-        }
-    }
-    catch (error) {
-        return {
-            statusCode: 500,
-            data: {
-                message: 'Erro ao finalizar corrida',
-                error: error.message
-            }
-        }
     }
 }
 
 module.exports = {
     createRide,
     getRides,
-    startRide,
-    endRide,
-    getRidesByUserEmail
+    getRidesByUserEmail,
+    updateRide
 }
