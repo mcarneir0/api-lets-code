@@ -22,7 +22,7 @@ const startRide = async (rideId) => {
             status: 'iniciada',
             startTime: new Date()
         }
-    });
+    }, { new: true });
     return response;
 }
 
@@ -32,7 +32,7 @@ const endRide = async (rideId) => {
             status: 'finalizada',
             finishTime: new Date()
         }
-    });
+    }, { new: true });
     return response;
 }
 
