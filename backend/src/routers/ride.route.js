@@ -5,7 +5,7 @@ const verifyToken = require('../utils/verifyToken');
 
 router.post('', verifyToken, rideController.createRide);
 router.get('', rideController.getRides);
-router.get('/:userEmail', rideController.getRidesByUserEmail);
+router.get('/users/:userPhone', rideController.getRidesByPhone);
 router.patch('/:rideId', verifyToken, rideController.updateRide);
 
 module.exports = router;

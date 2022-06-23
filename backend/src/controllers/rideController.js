@@ -11,9 +11,9 @@ const getRides = async (req, res) => {
     res.status(response.statusCode).json(response.data);
 }
 
-const getRidesByUserEmail = async (req, res) => {
-    const { userEmail } = req.params;
-    const response = await rideService.getRidesByUserEmail(userEmail);
+const getRidesByPhone = async (req, res) => {
+    const { userPhone } = req.params;
+    const response = await rideService.getRidesByPhone(userPhone);
     res.status(response.statusCode).json(response.data);
 }
 
@@ -27,6 +27,6 @@ const updateRide = async (req, res) => {
 module.exports = {
     createRide,
     getRides,
-    getRidesByUserEmail,
+    getRidesByPhone,
     updateRide
 }

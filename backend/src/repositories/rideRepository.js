@@ -36,8 +36,8 @@ const endRide = async (rideId) => {
     return response;
 }
 
-const getRidesByUserEmail = async (userEmail) => {
-    const response = await Ride.find({ user: { email: userEmail } });
+const getRidesByPhone = async (userPhone) => {
+    const response = await Ride.find({ user: { telephone: userPhone } });
     return response;
 }
 
@@ -47,5 +47,5 @@ module.exports = {
     getRideById,
     startRide,
     endRide,
-    getRidesByUserEmail
+    getRidesByPhone
 }

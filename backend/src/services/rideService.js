@@ -22,9 +22,9 @@ const createRide = async (ride) => {
         }
     }
     
-    //  Verifica se o usuário existe de acordo com o email
+    //  Verifica se o usuário existe de acordo com o telefone
     try {
-        const userResponse = await userRepository.getUserByEmail(user.email);
+        const userResponse = await userRepository.getUserByPhone(user.telephone);
         if (!userResponse) {
             return {
                 statusCode: 404,
@@ -110,23 +110,19 @@ const getRides = async () => {
     }
 }
 
-const getRidesByUserEmail = async (userEmail) => {
+const getRidesByPhone = async (userPhone) => {
 
     try {
-        const response = await rideRepository.getRidesByUserEmail(userEmail);
+        const response = await rideRepository.getRidesByPhone(userPhone);
 
-        //  Filtrando as corridas encontradas de acordo com o status
-        const pendentes = response.filter(ride => ride.status === 'pendente');
-        const iniciadas = response.filter(ride => ride.status === 'iniciada');
-        const finalizadas = response.filter(ride => ride.status === 'finalizada');
+        // //  Filtrando as corridas encontradas de acordo com o status
+        // const pendentes = response.filter(ride => ride.status === 'pendente');
+        // const iniciadas = response.filter(ride => ride.status === 'iniciada');
+        // const finalizadas = response.filter(ride => ride.status === 'finalizada');
 
         return {
             statusCode: 200,
-            data: {
-                pendentes: pendentes,
-                iniciadas: iniciadas,
-                finalizadas: finalizadas
-            }
+            data: response
         }
     }
     catch (error) {
@@ -254,6 +250,6 @@ const updateRide = async (rideId, newStatus) => {
 module.exports = {
     createRide,
     getRides,
-    getRidesByUserEmail,
+    getRidesByPhone,
     updateRide
 }

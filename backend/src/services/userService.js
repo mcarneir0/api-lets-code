@@ -7,10 +7,10 @@ require('dotenv').config();
 //  data: armazena o conteúdo da requisição
 //      pode ser um objeto, um array ou uma string
 
-const createUser = async (name, telephone, email, password) => {
+const createUser = async (user) => {
 
     //  Validar os parâmetros do usuário
-    if (!name || !telephone || !email || !password) {
+    if (!user) {
         return {
             statusCode: 400,
             data: { message: 'Não foi possível criar o usuário. Os parâmetros não foram informados corretamente.' }
@@ -19,7 +19,7 @@ const createUser = async (name, telephone, email, password) => {
 
     //  Depois da validação, verificar se o usuário já existe
     try {
-        const userExists = await userRepository.getUserByEmail(email);
+        const userExists = await userRepository.getUserByPhone(user.telephone);
         if (userExists) {
             return {
                 statusCode: 409,
@@ -39,7 +39,6 @@ const createUser = async (name, telephone, email, password) => {
 
     //  Se não existir, criar o usuário
     try {        
-        const user = { name, telephone, email, password };
         await userRepository.createUser(user);
         return {
             statusCode: 201,
@@ -141,8 +140,10 @@ const login = async (telephone, password) => {
             statusCode: 200,
             data: {
                 auth: true,
-                user: user.id,
-                token: token
+                token: token,
+                userId: user.id,
+                userName: user.name,
+                userPhone: user.telephone
             }
         }
     }
