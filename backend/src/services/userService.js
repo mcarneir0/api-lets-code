@@ -1,5 +1,6 @@
 const userRepository = require('../repositories/userRepository');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 //  Trabalhando com um objeto de retorno padrão
 //  statusCode: armazena o código de status da requisição
@@ -135,7 +136,7 @@ const login = async (telephone, password) => {
 
     //  Se o usuário existir, gerar o token
     try {
-        const token = jwt.sign({ id: user.id }, "Let's Code", { expiresIn: '10m' });
+        const token = jwt.sign({ id: user.id }, process.env.JWT_KEY, { expiresIn: '1h' });
         return {
             statusCode: 200,
             data: {

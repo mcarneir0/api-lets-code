@@ -1,5 +1,5 @@
 //  Arquivo responsável por verificar todos os tokens de acesso
-
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
     }
 
     //  Verificando se o token é válido
-    jwt.verify(token, "Let's Code", (err, decoded) => {
+    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
         if (err) {
             return res.status(500).json({
                 auth: false,
