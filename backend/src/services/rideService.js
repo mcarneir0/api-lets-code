@@ -5,30 +5,22 @@ const vehicleRepository = require('../repositories/vehicleRepository');
 const createRide = async (ride) => {
 
     //  Verifica se os dados da corrida foram preenchidos
-    if (!ride) {
+    if (!ride.user.telephone || !ride.vehicle.licensePlate || !ride.startPlace || !ride.finishPlace) {
         return {
             statusCode: 400,
-            data: { message: 'Dados da corrida não preenchidos' }
+            data: { message: 'Dados da corrida ausentes. Verifique se todos os campos foram preenchidos.' }
         }
     }
 
-    const { user, vehicle, startPlace, finishPlace } = ride;
+    const { user, vehicle } = ride;
 
-    //  Verifica se os dados do usuário foram preenchidos
-    if (!user) {
-        return {
-            statusCode: 400,
-            data: { message: 'Dados do usuário não preenchidos' }
-        }
-    }
-    
     //  Verifica se o usuário existe de acordo com o telefone
     try {
         const userResponse = await userRepository.getUserByPhone(user.telephone);
         if (!userResponse) {
             return {
                 statusCode: 404,
-                data: { message: 'Usuário não encontrado' }
+                data: { message: 'Usuário não encontrado.' }
             }
         }
     }
@@ -36,17 +28,9 @@ const createRide = async (ride) => {
         return {
             statusCode: 500,
             data: {
-                message: 'Erro ao buscar usuário',
+                message: 'Erro ao buscar usuário.',
                 error: error.message
             }
-        }
-    }
-
-    //  Verifica se os dados do veículo foram preenchidos
-    if (!vehicle) {
-        return {
-            statusCode: 400,
-            data: { message: 'Dados do veículo não preenchidos' }
         }
     }
 
@@ -56,7 +40,7 @@ const createRide = async (ride) => {
         if (!vehicleResponse) {
             return {
                 statusCode: 404,
-                data: { message: 'Veículo não encontrado' }
+                data: { message: 'Veículo não encontrado.' }
             }
         }
     }
@@ -117,7 +101,7 @@ const getRidesByPhone = async (userPhone, page) => {
 
         if (!response) {
             return {
-                statusCode: 404,
+                statusCode: 204,
                 data: { message: 'Nenhuma corrida encontrada para o usuário.' }
             }
         }

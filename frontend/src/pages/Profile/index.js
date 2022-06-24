@@ -53,7 +53,7 @@ export default function Profile() {
 
     console.log(response.data);
     if (response.data) {
-      alert('Corrida atualizada com sucesso, recarregue a página !')
+      alert('Corrida atualizada com sucesso, recarregue a página!')
     }
 
   }

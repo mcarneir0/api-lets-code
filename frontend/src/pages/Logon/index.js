@@ -52,11 +52,11 @@ export default function Logon() {
     }
     catch (err) {
       if (err.response.status === 400) {
-        alert(err.response.data);
-        history.push('/register')
+        alert(err.response.data.message);
+        // history.push('/register')
       }
       else
-        alert(err.response.data);
+        alert(err.response.data.message);
     }
   }
   return (

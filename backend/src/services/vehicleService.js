@@ -4,10 +4,10 @@ const createVehicle = async (vehicle) => {
     //  Tratamento de erros
 
     //  Verifica se o veículo está preenchido
-    if (!vehicle) {
+    if (!vehicle.model || !vehicle.licensePlate || !vehicle.status) {
         return {
             statusCode: 400,
-            data: { message: 'Dados do veículo não preenchidos' }
+            data: { message: 'Dados do veículo não preenchidos.' }
         }
     }
 
@@ -18,7 +18,7 @@ const createVehicle = async (vehicle) => {
             if (vehicleExists) {
                 return {
                 statusCode: 409,
-                data: { message: 'Veículo já cadastrado' }
+                data: { message: 'Veículo já cadastrado.' }
                 }
             }
         }
@@ -57,7 +57,7 @@ const getVehicles = async () => {
         if (!response) {
             return {
                 statusCode: 404,
-                data: { message: 'Nenhum veículo cadastrado' }
+                data: { message: 'Nenhum veículo cadastrado.' }
             }
         }
         else {
@@ -71,7 +71,7 @@ const getVehicles = async () => {
         return {
             statusCode: 500,
             data: {
-                message: 'Erro ao buscar veículos',
+                message: 'Erro ao buscar veículos.',
                 error: error.message
             }
         }

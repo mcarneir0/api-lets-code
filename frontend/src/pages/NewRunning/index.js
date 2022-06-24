@@ -39,8 +39,7 @@ export default function NewRunning() {
       history.push('/race/new', res.data);
 
     } catch (err) {
-      //alert('Erro ao solicitar corrida, tente novamente!')
-      alert(err.response.data);
+      alert(err.response.data.message);
     }
 
   }

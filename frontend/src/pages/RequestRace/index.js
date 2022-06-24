@@ -34,9 +34,8 @@ export default function RequestRace(props) {
       history.push('/race/finish', res.data);
     }
     catch (err) {
-      //alert(err.response.data);
       console.log(err)
-      alert(err.response.data);
+      alert(err.response.data.message);
     }
   }
 

@@ -36,7 +36,7 @@ export default function FinishRace(props) {
       history.push('/profile');
     }
     catch (err) {
-      alert(err.response.data);
+      alert(err.response.data.message);
     }
   }
 

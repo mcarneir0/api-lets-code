@@ -10,10 +10,10 @@ require('dotenv').config();
 const createUser = async (user) => {
 
     //  Validar os parâmetros do usuário
-    if (!user) {
+    if (!user.name || !user.telephone || !user.password || !user.email) {
         return {
             statusCode: 400,
-            data: { message: 'Não foi possível criar o usuário. Os parâmetros não foram informados corretamente.' }
+            data: { message: 'Não foi possível criar o usuário. Verifique se os campos foram preenchidos corretamente.' }
         }
     }
 
@@ -108,7 +108,7 @@ const login = async (telephone, password) => {
     if (!telephone || !password) {
         return {
             statusCode: 400,
-            data: { message: 'Não foi possível fazer o login. Os parâmetros não foram informados corretamente.' }
+            data: { message: 'Usuário ou senha não informados. Verifique se todos os campos foram preenchidos corretamente.' }
         }
     }
 
@@ -119,7 +119,7 @@ const login = async (telephone, password) => {
         if (!user) {
             return {
                 statusCode: 404,
-                data: { message: 'Usuário não encontrado.' }
+                data: { message: 'Usuário ou senha incorreta.' }
             }
         }
     }
