@@ -1,7 +1,7 @@
 const rideController = require('../controllers/rideController');
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../utils/verifyToken');
+const verifyToken = require('../middleware/verifyToken');
 
 router.post('', verifyToken, rideController.createRide);
 router.get('', rideController.getRides);
