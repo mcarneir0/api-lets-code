@@ -110,15 +110,17 @@ const getRides = async () => {
     }
 }
 
-const getRidesByPhone = async (userPhone) => {
+const getRidesByPhone = async (userPhone, page) => {
 
     try {
-        const response = await rideRepository.getRidesByPhone(userPhone);
+        const response = await rideRepository.getRidesByPhone(userPhone, page);
 
-        // //  Filtrando as corridas encontradas de acordo com o status
-        // const pendentes = response.filter(ride => ride.status === 'pendente');
-        // const iniciadas = response.filter(ride => ride.status === 'iniciada');
-        // const finalizadas = response.filter(ride => ride.status === 'finalizada');
+        if (!response) {
+            return {
+                statusCode: 404,
+                data: { message: 'Nenhuma corrida encontrada para o usuário.' }
+            }
+        }
 
         return {
             statusCode: 200,

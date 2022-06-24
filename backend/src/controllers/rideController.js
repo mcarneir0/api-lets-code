@@ -13,7 +13,8 @@ const getRides = async (req, res) => {
 
 const getRidesByPhone = async (req, res) => {
     const { userPhone } = req.params;
-    const response = await rideService.getRidesByPhone(userPhone);
+    const { page = 1 } = req.query;
+    const response = await rideService.getRidesByPhone(userPhone, page);
     res.status(response.statusCode).json(response.data);
 }
 

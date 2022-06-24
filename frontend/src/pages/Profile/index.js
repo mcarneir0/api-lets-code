@@ -24,7 +24,7 @@ export default function Profile() {
         }
       })
       .then(res => {
-        setItems(res.data);
+        setItems(res.data.docs);
         setPages(res.data.pages);
       })
   }, [userPhone, page]);

@@ -36,8 +36,10 @@ const endRide = async (rideId) => {
     return response;
 }
 
-const getRidesByPhone = async (userPhone) => {
-    const response = await Ride.find({ user: { telephone: userPhone } });
+const getRidesByPhone = async (userPhone, page) => {
+    const response = await Ride.paginate({
+        'user.telephone': userPhone
+    }, { page, limit: 10 });
     return response;
 }
 
