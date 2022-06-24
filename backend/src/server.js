@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const requireDir = require('require-dir');
 const cors = require('cors');
+require('dotenv').config();
 
 //  Iniciando o servidor
 const app = express();
@@ -11,8 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 //  Conectando com o banco de dados
-mongoose.connect(
-    'mongodb+srv://mcarneiro:Mc123456@cluster0.c5faz.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect(process.env.MONGO_URL,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
