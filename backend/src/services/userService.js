@@ -1,5 +1,6 @@
 const userRepository = require('../repositories/userRepository');
 const jwt = require('jsonwebtoken');
+const security = require('../utils/securityPassword');
 require('dotenv').config();
 
 //  Trabalhando com um objeto de retorno padrão
@@ -38,7 +39,8 @@ const createUser = async (user) => {
     }
 
     //  Se não existir, criar o usuário
-    try {        
+    try {
+        user.password = security.encryptPassword(user.password);
         await userRepository.createUser(user);
         return {
             statusCode: 201,
@@ -115,11 +117,11 @@ const login = async (telephone, password) => {
     //  Verificar se o usuário existe
     let user;
     try {
-        user = await userRepository.getUserByTelephoneAndPassword(telephone, password);
+        user = await userRepository.getUserByPhone(telephone);
         if (!user) {
             return {
                 statusCode: 404,
-                data: { message: 'Usuário ou senha incorreta.' }
+                data: { message: 'Usuário não encontrado.' }
             }
         }
     }
@@ -133,26 +135,37 @@ const login = async (telephone, password) => {
         }
     }
 
-    //  Se o usuário existir, gerar o token
-    try {
-        const token = jwt.sign({ id: user.id }, process.env.JWT_KEY, { expiresIn: '1h' });
+    const hashPassword = user.password;
+    const isPasswordValid = security.comparePassword(password, hashPassword);
+    if (!isPasswordValid) {
         return {
-            statusCode: 200,
-            data: {
-                auth: true,
-                token: token,
-                userId: user.id,
-                userName: user.name,
-                userPhone: user.telephone
-            }
+            statusCode: 401,
+            data: { message: 'Senha inválida.' }
         }
     }
-    catch (error) {
-        return {
-            statusCode: 500,
-            data: {
-                message: 'Não foi possível gerar o token.',
-                error: error.message
+
+    //  Se o usuário existir, gerar o token
+    else {
+        try {
+            const token = jwt.sign({ id: user.id }, process.env.JWT_KEY, { expiresIn: '1h' });
+            return {
+                statusCode: 200,
+                data: {
+                    auth: true,
+                    token: token,
+                    userId: user.id,
+                    userName: user.name,
+                    userPhone: user.telephone
+                }
+            }
+        }
+        catch (error) {
+            return {
+                statusCode: 500,
+                data: {
+                    message: 'Não foi possível gerar o token.',
+                    error: error.message
+                }
             }
         }
     }
