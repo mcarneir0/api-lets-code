@@ -21,9 +21,15 @@ const getUserByPhone = async (userPhone) => {
     return response;
 }
 
+const deleteUserByPhone = async (userPhone) => {
+    const response = await User.findOneAndRemove({ telephone: userPhone });
+    return response;
+}
+
 module.exports = {
     createUser,
     getUsers,
     getUserByTelephoneAndPassword,
-    getUserByPhone
+    getUserByPhone,
+    deleteUserByPhone
 }

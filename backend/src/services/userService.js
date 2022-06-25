@@ -171,10 +171,48 @@ const login = async (telephone, password) => {
     }
 }
 
+const deleteUserByPhone = async (telephone) => {
+
+    //  Verificar se o telefone foi informado
+    if (!telephone) {
+        return {
+            statusCode: 400,
+            data: { message: 'Telefone não informado.' }
+        }
+    }
+
+    //  Delete do usuário
+    try {
+        const user = await userRepository.deleteUserByPhone(telephone);
+        if (!user) {
+            return {
+                statusCode: 404,
+                data: { message: 'Usuário não encontrado.' }
+            }
+        }
+        else {
+            return {
+                statusCode: 200,
+                data: { message: 'Usuário deletado com sucesso.' }
+            }
+        }
+    }
+    catch (error) {
+        return {
+            statusCode: 500,
+            data: {
+                message: 'Não foi possível deletar o usuário.',
+                error: error.message
+            }
+        }
+    }
+}
+
 //  Tornando as funções disponíveis para outros arquivos
 module.exports = {
     createUser,
     getUsers,
     getUserByTelephoneAndPassword,
-    login
+    login,
+    deleteUserByPhone
 }

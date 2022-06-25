@@ -23,9 +23,16 @@ const login = async (req, res) => {
     return res.status(response.statusCode).json(response.data);
 }
 
+const deleteUserByPhone = async (req, res) => {
+    const { telephone } = req.params;
+    const response = await userService.deleteUserByPhone(telephone);
+    return res.status(response.statusCode).json(response.data);
+}
+
 module.exports = {
     postUser,
     getUser,
     getUserByTelephoneAndPassword,
-    login
+    login,
+    deleteUserByPhone
 }
